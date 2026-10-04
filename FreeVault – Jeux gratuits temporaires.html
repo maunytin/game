@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FreeVault – Jeux gratuits temporaires</title>
+<style>
+:root{--bg:#0b0b12;--bg2:#14141f;--card:rgba(255,255,255,.05);--bd:rgba(255,255,255,.09);--tx:#f2f2f7;--mut:#9a9ab0;--ac:#7c6cff;--ac2:#22d3ee;--ok:#34d399;--warn:#fb923c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f4fa;--bg2:#fff;--card:#fff;--bd:rgba(0,0,0,.09);--tx:#17171f;--mut:#63637a}}
+:root[data-theme="light"]{--bg:#f4f4fa;--bg2:#fff;--card:#fff;--bd:rgba(0,0,0,.09);--tx:#17171f;--mut:#63637a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(900px 400px at 15% -10%,rgba(124,108,255,.25),transparent),radial-gradient(700px 400px at 100% 0,rgba(34,211,238,.15),transparent),var(--bg);color:var(--tx);font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+.w{max-width:1040px;margin:0 auto;padding:28px 16px 56px}
+.hero h1{font-size:clamp(1.9rem,5vw,2.8rem);margin:0;letter-spacing:-.03em;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);margin:6px 0 4px;max-width:620px}
+.st{font-size:.8rem;color:var(--mut);display:flex;align-items:center;gap:6px}
+.st i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}
+.tabs button{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 16px;border-radius:999px;font:inherit;font-size:.9rem;cursor:pointer;backdrop-filter:blur(8px);transition:.15s}
+.tabs button:hover{transform:translateY(-1px)}
+.tabs button.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border-color:transparent}
+.tabs b{font-weight:600;opacity:.75;margin-left:6px}
+h2{font-size:1.15rem;margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+h2 small{color:var(--mut);font-weight:400;font-size:.8rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;cursor:pointer;transition:.2s;display:flex;flex-direction:column;text-align:left;color:inherit;font:inherit;padding:0}
+.c:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.cv{height:120px;display:flex;align-items:flex-end;justify-content:space-between;padding:10px;position:relative}
+.cv em{font-style:normal;font-size:2.4rem;font-weight:800;color:rgba(255,255,255,.9);position:absolute;top:8px;left:14px}
+.pill{font-size:.7rem;padding:3px 9px;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;backdrop-filter:blur(6px)}
+.cb{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.cb h3{margin:0;font-size:.98rem;line-height:1.3}
+.m{font-size:.82rem;color:var(--mut)}
+.old{text-decoration:line-through}
+.left{font-weight:600;font-size:.82rem;color:var(--ok);margin-top:auto;padding-top:6px}
+.left.u{color:var(--warn)}
+.empty{color:var(--mut)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+.ov.on{display:flex}
+.md{background:var(--bg2);border:1px solid var(--bd);border-radius:20px;max-width:560px;width:100%;max-height:90vh;overflow:auto}
+.md .cv{height:170px}
+.md .cb{padding:20px;gap:10px}
+.md h3{font-size:1.4rem}
+.x{position:absolute;top:10px;right:10px;border:0;background:rgba(0,0,0,.5);color:#fff;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
+.p{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff}
+.s{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.note{margin-top:34px;font-size:.84rem;color:var(--mut);border-top:1px solid var(--bd);padding-top:14px}
+.note a{color:var(--ac2)}
+</style>
+</head>
+<body>
+<div class="w">
+<div class="hero"><h1>🎁 FreeVault</h1>
+<p>Les jeux normalement payants offerts pour une durée limitée, classés par launcher. Pas de free-to-play.</p>
+<div class="st"><i></i><span id="stat">Données du 4 octobre 2026</span></div></div>
+<div class="tabs" id="tabs"></div>
+<div id="out"></div>
+<div class="note">Vérifie toujours l'offre sur le launcher avant de réclamer. Les boutons « appli » utilisent les liens du launcher (Steam, Epic, GOG) : ils ouvrent la recherche du jeu dans l'appli, et le lien web reste disponible si l'appli ne s'ouvre pas. Prime Gaming nécessite un abonnement Amazon Prime. Certaines offres Steam dépendent de la région.
+<br>Sources : <a href="https://store.epicgames.com/fr/free-games" target="_blank" rel="noopener">Epic</a> · <a href="https://steamdb.info/upcoming/free/" target="_blank" rel="noopener">SteamDB</a> · <a href="https://www.gog.com/" target="_blank" rel="noopener">GOG</a> · <a href="https://luna.amazon.com/" target="_blank" rel="noopener">Prime Gaming</a></div>
+</div>
+<div class="ov" id="ov"><div class="md" id="md"></div></div>
+<script>
+var L={epic:{n:"Epic Games",c:"#6b7280"},steam:{n:"Steam",c:"#1b6aa5"},gog:{n:"GOG",c:"#8a3ffc"},prime:{n:"Prime Gaming",c:"#0f9fd6"}};
+var DEF="Description détaillée à venir : consulte la fiche du jeu sur le store.";
+// t titre, l launcher, st store du bouton, e fin, s début, p prix, k type, d description
+var D=[
+{t:"System Shock 2: 25th Anniversary Remaster",l:"epic",e:"2026-10-08T15:00:00Z",p:"29,99 $",k:"Jeu",d:"Remaster par Nightdive Studios (édité par Atari) du classique de l'immersive sim et de l'horreur spatiale. Au programme : co-op en cross-play et support du format large."},
+{t:"Buried Stars",l:"epic",e:"2026-10-08T15:00:00Z",p:"39,99 $",k:"Jeu",d:"Aventure à mystère sur le site de l'effondrement d'une émission de survie. Les candidats piégés communiquent entre eux et avec l'extérieur via les réseaux sociaux, mais la confiance se fissure."},
+{t:"Out of Sight",l:"epic",s:"2026-10-08T15:00:00Z",e:"2026-10-15T15:00:00Z",k:"Jeu",d:"Jeu d'infiltration et d'horreur, offert à partir du 8 octobre."},
+{t:"TerraScape",l:"epic",s:"2026-10-08T15:00:00Z",e:"2026-10-15T15:00:00Z",k:"Jeu"},
+{t:"Arena of Trophies",l:"steam",e:"2026-10-22T23:59:00Z",k:"Jeu",d:"Jeu de gladiateurs. Le studio Thor Game Studios l'offre à tout le monde avant son retrait de la boutique, le 22 octobre."},
+{t:"Rotwood – Drakin Armoury Pack",l:"steam",e:"2026-10-15T17:00:00Z",k:"DLC",d:"Pack d'armures pour Rotwood. Nécessite le jeu de base."},
+{t:"MXGP 26 – Scrubdesignz Liveries",l:"steam",e:"2026-10-15T17:00:00Z",k:"DLC",d:"Livrées personnalisées pour MXGP 26. Nécessite le jeu de base."},
+{t:"Hunting Simulator 3 – Classic American Hunter Pack",l:"steam",s:"2026-10-29T00:00:00Z",e:"2026-10-31T23:59:00Z",k:"DLC",d:"Pack du jeu de Nacon Studio Ghent, offert en fin de mois selon la région."},
+{t:"Gear.Club Unlimited 3 – Signature Pack",l:"steam",s:"2026-10-15T00:00:00Z",k:"DLC",d:"Pack du jeu de course Gear.Club Unlimited 3. Date exacte à confirmer."},
+{t:"Fireside Feelings",l:"steam",s:"2026-10-15T00:00:00Z",k:"Jeu",d:"Jeu cosy axé sur le dialogue et la narration. Prévu en octobre, date à confirmer."},
+{t:"Bounty Train",l:"gog",e:"2026-10-05T13:00:00Z",k:"Jeu",d:"Gestion d'un train dans l'Ouest américain."},
+{t:"Just Die Already",l:"prime",st:"epic",e:"2026-10-07T23:59:00Z",k:"Jeu",d:"Bac à sable déjanté où l'on incarne des personnes âgées."},
+{t:"War Hospital",l:"prime",st:"epic",e:"2026-10-07T23:59:00Z",k:"Jeu",d:"Gestion d'un hôpital de campagne pendant la Première Guerre mondiale."},
+{t:"Drop Duchy",l:"prime",st:"epic",e:"2026-10-14T23:59:00Z",k:"Jeu",d:"Premier jeu du studio Sleepy Mill, un mélange de genres plutôt original."},
+{t:"Botany Manor",l:"prime",st:"epic",e:"2026-10-14T23:59:00Z",k:"Jeu",d:"Jeu de réflexion autour de la botanique."},
+{t:"DOOM + DOOM II",l:"prime",st:"gog",e:"2026-10-14T23:59:00Z",k:"Jeu",d:"Les deux FPS originaux d'id Software, années 1990."},
+{t:"DOOM Eternal",l:"prime",st:"ms",e:"2026-10-21T23:59:00Z",k:"Jeu",d:"Suite du reboot de 2016 : combat nerveux, gestion des ressources, changements d'armes constants et glory kills."},
+{t:"RiMS Racing",l:"prime",st:"epic",e:"2026-10-21T23:59:00Z",k:"Jeu",d:"Jeu de course de moto."},
+{t:"Wall World 2",l:"prime",st:"amz",e:"2026-10-21T23:59:00Z",k:"Jeu"},
+{t:"Havendock",l:"prime",st:"amz",e:"2026-10-28T23:59:00Z",k:"Jeu"},
+{t:"Weakless",l:"prime",st:"gog",e:"2026-10-28T23:59:00Z",k:"Jeu"},
+{t:"Zoria: Age of Shattering",l:"prime",st:"gog",e:"2026-10-28T23:59:00Z",k:"Jeu",d:"RPG tactique en escouade de Tiny Tricket Games, sorti en 2024."},
+{t:"Hue",l:"prime",st:"epic",e:"2026-10-28T23:59:00Z",k:"Jeu",d:"Jeu de plateforme et de réflexion basé sur les couleurs."},
+{t:"High on Life",l:"prime",st:"epic",e:"2026-10-28T23:59:00Z",k:"Jeu",d:"FPS humoristique de Squanch Games."},
+{t:"The Da Vinci Cryptex",l:"prime",st:"amz",e:"2026-10-28T23:59:00Z",k:"Jeu",d:"Jeu d'aventure et de puzzles."}
+];
+var cur="all",now=Date.now();
+function q(x){return encodeURIComponent(x.t.replace(/ – .*$/,""))}
+function app(x){var s=x.st||x.l,n=q(x);
+ if(s=="steam")return "steam://openurl/https://store.steampowered.com/search/?term="+n;
+ if(s=="epic")return "com.epicgames.launcher://store/browse?q="+n;
+ if(s=="gog")return "goggalaxy://openStoreUrl/"+encodeURIComponent("https://www.gog.com/en/games?query="+decodeURIComponent(n));
+ return null}
+function web(x){var s=x.st||x.l,n=q(x);
+ if(s=="steam")return "https://store.steampowered.com/search/?term="+n;
+ if(s=="epic")return "https://store.epicgames.com/fr/browse?q="+n;
+ if(s=="gog")return "https://www.gog.com/en/games?query="+n;
+ if(s=="ms")return "https://www.xbox.com/fr-FR/search?q="+n;
+ return "https://luna.amazon.com/"}
+function live(x){return !x.e||Date.parse(x.e)>=now}
+function soon(x){return x.s&&Date.parse(x.s)>now}
+function fmt(d){return new Date(d).toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}
+function left(x){
+ if(soon(x))return{t:"Dès le "+fmt(x.s),u:0};
+ if(!x.e)return{t:"Fin inconnue",u:0};
+ var h=(Date.parse(x.e)-now)/36e5;
+ if(h<24)return{t:"Se termine dans "+Math.max(1,Math.round(h))+" h",u:1};
+ var j=Math.ceil(h/24);return{t:"Encore "+j+" j (jusqu'au "+fmt(x.e)+")",u:j<=2}}
+function cov(x,big){
+ var h=0;for(var i=0;i<x.t.length;i++)h=(h*31+x.t.charCodeAt(i))%360;
+ return '<div class="cv" style="background:linear-gradient(135deg,hsl('+h+',70%,38%),hsl('+((h+60)%360)+',75%,28%))"><em>'+x.t.charAt(0)+'</em><span class="pill">'+L[x.l].n+'</span><span class="pill">'+x.k+'</span>'+(big?'<button class="x" id="x">✕</button>':'')+'</div>'}
+function card(x,i){var r=left(x);
+ return '<button class="c" data-i="'+i+'">'+cov(x)+'<div class="cb"><h3>'+x.t+'</h3><div class="m">'+(x.p?'<span class="old">'+x.p+'</span> → gratuit':'Gratuit')+'</div><div class="left'+(r.u?' u':'')+'">'+r.t+'</div></div></button>'}
+function render(){
+ var items=D.filter(live),tb='<button data-k="all" class="'+(cur=="all"?"on":"")+'">Tous<b>'+items.length+'</b></button>';
+ Object.keys(L).forEach(function(k){tb+='<button data-k="'+k+'" class="'+(cur==k?"on":"")+'">'+L[k].n+'<b>'+items.filter(function(x){return x.l==k}).length+'</b></button>'});
+ tabs.innerHTML=tb;var h="";
+ Object.keys(L).forEach(function(k){if(cur!="all"&&cur!=k)return;
+  var a=[],b=[];D.forEach(function(x,i){if(x.l==k&&live(x))(soon(x)?b:a).push(card(x,i))});
+  h+='<h2><span style="width:10px;height:10px;border-radius:50%;background:'+L[k].c+'"></span>'+L[k].n+'<small>'+(a.length+b.length)+' offre(s)</small></h2>';
+  h+=a.length?'<div class="grid">'+a.join("")+'</div>':'<div class="empty">Rien de gratuit pour le moment.</div>';
+  if(b.length)h+='<div class="m" style="margin:16px 0 8px">À venir</div><div class="grid">'+b.join("")+'</div>'});
+ out.innerHTML=h;
+ [].forEach.call(document.querySelectorAll("#tabs button"),function(b){b.onclick=function(){cur=b.getAttribute("data-k");render()}});
+ [].forEach.call(document.querySelectorAll(".c"),function(b){b.onclick=function(){openG(+b.getAttribute("data-i"))}})}
+function openG(i){var x=D[i],r=left(x),a=app(x);
+ md.innerHTML=cov(x,1)+'<div class="cb"><h3>'+x.t+'</h3><div class="m">'+L[x.l].n+' · '+x.k+(x.p?' · <span class="old">'+x.p+'</span> → gratuit':' · Gratuit')+'</div><div class="left'+(r.u?' u':'')+'" style="margin:0">'+r.t+'</div><p style="margin:4px 0">'+(x.d||DEF)+'</p><div class="btns">'+(a?'<a class="btn p" href="'+a+'">Afficher sur le store (appli)</a>':'')+'<a class="btn '+(a?'s':'p')+'" href="'+web(x)+'" target="_blank" rel="noopener">Ouvrir sur le web</a></div></div>';
+ ov.classList.add("on");x_=document.getElementById("x");x_.onclick=function(){ov.classList.remove("on")}}
+var x_;ov.onclick=function(e){if(e.target==ov)ov.classList.remove("on")};
+document.addEventListener("keydown",function(e){if(e.key=="Escape")ov.classList.remove("on")});
+// Mise à jour auto : tente de charger les offres du jour (API GamerPower) ; sinon garde les données du 4 oct.
+function pf(w){return /epic/i.test(w)?"epic":/steam/i.test(w)?"steam":/gog/i.test(w)?"gog":null}
+function refresh(){
+ fetch("https://www.gamerpower.com/api/giveaways?type=game&platform=steam.epic-games-store.gog").then(function(r){return r.json()}).then(function(j){
+  if(!Array.isArray(j)||!j.length)return;
+  var n=[];j.forEach(function(g){var l=pf(g.platforms||"");if(!l)return;
+   var e=g.end_date&&g.end_date!="N/A"?g.end_date.replace(" ","T")+"Z":null;
+   n.push({t:g.title.replace(/\s*\(.*\)$/,"").replace(/ Giveaway$/i,""),l:l,e:e,p:g.worth&&g.worth!="N/A"?g.worth:null,k:"Jeu",d:g.description})});
+  if(n.length){D=n;now=Date.now();render();stat.textContent="Mis à jour automatiquement le "+new Date().toLocaleDateString("fr-FR")}
+ }).catch(function(){})}
+render();refresh();setInterval(refresh,6*36e5);
+document.addEventListener("visibilitychange",function(){if(!document.hidden){now=Date.now();render();refresh()}});
+</script>
+</body>
+</html>
